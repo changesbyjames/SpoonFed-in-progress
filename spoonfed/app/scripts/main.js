@@ -34,11 +34,9 @@ return $.ajax({
 }
 
   var app = angular.module('spoonFed', []);
-  app.controller('StoryController', function(){
+  app.controller('StoryController', function($scope){
     getFeed().then(function(data) {
       $scope.savedStories = data;
-      console.log($scope.savedStories.length);
-      console.log(data);
     }, function(err) {
       console.log('Error', err);
     });

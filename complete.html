@@ -48,14 +48,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <!-- endbuild-->
 
   <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
-  <!--<script src="spoonfed/app/bower_components/webcomponentsjs/webcomponents-lite.js"></script>-->
+  <script src="spoonfed/app/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
   <script src="spoonfed/app/bower_components/jquery/dist/jquery.js"></script>
   <script type='application/javascript' src='/spoonfed/app/bower_components/fastclick/lib/fastclick.js'></script>
   <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.10.min.js"></script>
   <!-- endbuild -->
 
   <!-- will be replaced with elements/elements.vulcanized.html -->
-  <!--<link rel="import" href="spoonfed/app/elements/news-story.html">-->
+  <link rel="import" href="spoonfed/app/elements/news-story.html">
   <!-- endreplace-->
   <style is="custom-style">
   .icons {
@@ -223,19 +223,21 @@ var awsLogin = function (facebookResponse) {
   <div class="container" ng-controller="StoryController as Ctrl">
     <p ng-repeat="story in savedStories">{{story.title}}<p>
 
-    <div class="card">
-      <div class="card-image">
+    <div class="card" ng-repeat="story in savedStories">
+      <paper-material class="card-image">
+      <paper-ripple></paper-ripple>
         <div class="card-title">
           <div class="card-title-buffer"></div>
           <div class="card-title-text-container">
             <div class="card-title-catagory nav-item">
+              <iron-icon class="icons" icon="{{catagory}}"></iron-icon>
             </div>
             <h1 class="card-title-text">{{story.title}}</h1>
           </div>
         </div>
       </div>
       <p class="card-text">{{decodeURI(story.encodedsummary)}}</p>
-    </div>
+    </paper-material>
   </div>
 
   <!-- build:js scripts/app.js -->
