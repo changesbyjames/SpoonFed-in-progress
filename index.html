@@ -1,0 +1,247 @@
+<!doctype html>
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<html ng-app="spoonFed" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="generator" content="SpoonFed News" />
+  <title>SpoonFed News</title>
+  <!-- Place favicon.ico in the `app/` directory -->
+
+  <!-- Chrome for Android theme color -->
+  <meta name="theme-color" content="#303F9F">
+
+  <!-- Web Application Manifest -->
+  <link rel="manifest" href="spoonfed/app/manifest.json">
+
+  <!-- Tile color for Win8 -->
+  <meta name="msapplication-TileColor" content="#3372DF">
+
+  <!-- Add to homescreen for Chrome on Android -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="application-name" content="PSK">
+  <link rel="icon" sizes="192x192" href="spoonfed/app/images/touch/chrome-touch-icon-192x192.png">
+
+  <!-- Add to homescreen for Safari on iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="white">
+  <meta name="apple-mobile-web-app-title" content="SpoonFed News">
+  <link rel="apple-touch-icon" href="spoonfed/app/images/touch/apple-touch-icon.png">
+
+  <!-- Tile icon for Win8 (144x144) -->
+  <meta name="msapplication-TileImage" content="spoonfed/app/images/touch/ms-touch-icon-144x144-precomposed.png">
+
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="spoonfed/app/styles/main.css">
+  <link rel="stylesheet" href="spoonfed/app/styles/flexbox.css">
+  <!-- endbuild-->
+
+  <!-- build:js bower_components/webcomponentsjs/webcomponents-lite.min.js -->
+  <script src="spoonfed/app/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="spoonfed/app/bower_components/jquery/dist/jquery.js"></script>
+  <script type='application/javascript' src='/spoonfed/app/bower_components/fastclick/lib/fastclick.js'></script>
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.2.10.min.js"></script>
+  <!-- endbuild -->
+
+  <!-- will be replaced with elements/elements.vulcanized.html -->
+  <link rel="import" href="spoonfed/app/elements/news-story.html">
+  <!-- endreplace-->
+  <style is="custom-style">
+  .icons {
+    --iron-icon-height: 35px;
+    --iron-icon-width: 35px;
+  }
+  .spoonfed-text{
+    display: none;
+  }
+  @media (min-width: 768px) {
+      .spoonfed-text{
+      display: inherit;
+  }
+}
+</style>
+</head>
+
+<body>
+<script>
+  /*
+  // This is called with the results from from FB.getLoginStatus().
+  function statusChangeCallback(mainresponse) {
+    awsLogin(mainresponse);
+    // The response object is returned with a status field that lets the
+    // app know the current login status of the person.
+    // Full docs on the response object can be found in the documentation
+    // for FB.getLoginStatus().
+    FB.api('/me', function(personresponse) {
+      console.log(mainresponse, personresponse);
+    });
+    if (response.status === 'connected') {
+      // Logged into your app and Facebook.
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      // The person is logged into Facebook, but not your app.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into this app.';
+    } else {
+      // The person is not logged into Facebook, so we're not sure if
+      // they are logged into this app or not.
+      document.getElementById('status').innerHTML = 'Please log ' +
+        'into Facebook.';
+    }
+  }
+
+  // This function is called when someone finishes with the Login
+  // Button.  See the onlogin handler attached to it in the sample
+  // code below.
+  function checkLoginState() {
+    console.log('checkLoginState');
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  }
+
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '1498052033821696',
+    cookie     : true,  // enable cookies to allow the server to access 
+                        // the session
+    xfbml      : true,  // parse social plugins on this page
+    version    : 'v2.2' // use version 2.2
+  });
+
+  // Now that we've initialized the JavaScript SDK, we call 
+  // FB.getLoginStatus().  This function gets the state of the
+  // person visiting this page and can return one of three states to
+  // the callback you provide.  They can be:
+  //
+  // 1. Logged into your app ('connected')
+  // 2. Logged into Facebook, but not your app ('not_authorized')
+  // 3. Not logged into Facebook and can't tell if they are logged into
+  //    your app or not.
+  //
+  // These three cases are handled in the callback function.
+
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful.  See statusChangeCallback() for when this call is made.
+  function testAPI() {
+    FB.api('/me', function(response) {
+    });
+  }
+
+// The parameters required to intialize the Cognito Credentials object.
+// If you are authenticating your users through one of the supported
+// identity providers you should set the Logins object with the provider
+// tokens. For example:
+var awsLogin = function (facebookResponse) {
+  var params = {
+    IdentityPoolId: "eu-west-1:2272513b-1c6b-4b8a-ad5a-6577796bf5c4",
+    Logins: {
+      'graph.facebook.com' : facebookResponse.authResponse.accessToken
+    }
+  };
+   
+  // set the Amazon Cognito region
+  AWS.config.region = 'us-west-1';
+  // initialize the Credentials object with our parameters
+  AWS.config.credentials = new AWS.CognitoIdentityCredentials(params);
+   
+  // We can set the get method of the Credentials object to retrieve
+  // the unique identifier for the end user (identityId) once the provider
+  // has refreshed itself
+  AWS.config.credentials.get(function(err) {
+      if (err) {
+          console.log("Error: "+err);
+          return;
+      }
+      console.log("Cognito Identity Id: " + AWS.config.credentials.identityId);
+   
+      // Other service clients will automatically use the Cognito Credentials provider
+      // configured in the JavaScript SDK.
+      var cognitoSyncClient = new AWS.CognitoSync();
+      cognitoSyncClient.listDatasets({
+          IdentityId: AWS.config.credentials.identityId,
+          IdentityPoolId: "eu-west-1:2272513b-1c6b-4b8a-ad5a-6577796bf5c4"
+      }, function(err, data) {
+          if ( !err ) {
+              console.log(JSON.stringify(data));
+          }
+      });
+});
+}*/
+</script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.7/angular.min.js"></script>
+    <script src="spoonfed/app/scripts/main.js"></script>
+  <nav>
+    <div class="nav-item nav-spoonfed">
+      <iron-icon class="icons" icon="spoonfed"></iron-icon>
+    </div>
+    <div class="nav-item">
+    <iron-icon class="icons spoonfed-text" icon="spoonfed-text"></iron-icon>
+    </div>
+    <div class="nav-item nav-add">
+      <iron-icon class="icons" icon="add"></iron-icon>
+      <paper-ripple></paper-ripple>
+    </div>
+    <div class="nav-item nav-profile">
+      <iron-icon class="icons" icon="social:person"></iron-icon>
+      <paper-ripple></paper-ripple>
+    </div>
+    <div class="nav-item nav-catagories" id="closed">
+      <iron-icon class="icons" icon="menu"></iron-icon>
+      <paper-ripple></paper-ripple>
+    </div>
+  </nav>
+  <header>
+    
+  </header>
+  <div class="container" ng-controller="StoryController as Ctrl">
+    <p >{{Ctrl.savedStories.length}}</p>
+    <paper-material class="card">
+      <div class="card-image">
+      <paper-ripple></paper-ripple>
+        <div class="card-title">
+          <div class="card-title-buffer"></div>
+          <div class="card-title-text-container">
+            <div class="card-title-catagory nav-item">
+              <iron-icon class="icons" icon="{{catagory}}"></iron-icon>
+            </div>
+            <h1 class="card-title-text">{{story.title}}</h1>
+          </div>
+        </div>
+      </div>
+      <p class="card-text">{{decodeURI(story.encodedsummary)}}</p>
+    </paper-material>
+  </div>
+
+  <!-- build:js scripts/app.js -->
+  <!-- endbuild-->
+
+</body>
+
+</html>

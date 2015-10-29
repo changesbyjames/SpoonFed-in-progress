@@ -1,0 +1,78 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/paper-ripple/paper-ripple.html">
+<link rel="import" href="../bower_components/paper-material/paper-material.html">
+<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/social-icons.html"> 
+
+<dom-module id="news-story">
+    <style is="custom-style">
+  </style>
+  <template>
+
+  </template>
+
+  <script>
+    (function() {      
+      Polymer({
+        ready: function(){
+          $(this).attr('id', 'closed');
+          $(this).find('.card-image').css('background-image', 'url("' + this.backgroundurl + '")');
+          this.summary = decodeURI(this.encodedsummary);
+          $(this).click(function(){
+            if($(this).attr('id') == 'closed'){
+              $(this).find('.card-image').addClass('card-image-open');
+              $(this).find('.card-text').addClass('card-text-open');
+              $(this).attr('id', 'open');
+            }else{
+              $(this).find('.card-text').removeClass('card-text-open');
+              $(this).find('.card-image').removeClass('card-image-open');
+              $(this).attr('id', 'closed');
+            }
+          })
+        },
+        is: 'news-story',
+
+        properties: {
+          title: {
+            type: String,
+            value: 'Cosby Accusers To Appear In TV Special'
+          },
+          photo: {
+            type: String,
+            value: 'test'
+          },
+          catagory: {
+            type: String,
+            value: 'spoonfed'
+          },
+          backgroundurl:{
+            type: String,
+            value: 'defaultphotourl'
+          },
+          encodedsummary: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Oops, something went a little wrong. Stay with us while we try and figure it out.'
+          },
+          summary: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Oops, something went a little wrong. Stay with us while we try and figure it out.'
+          }
+        }
+      });
+    })();
+  </script>
+
+</dom-module>
